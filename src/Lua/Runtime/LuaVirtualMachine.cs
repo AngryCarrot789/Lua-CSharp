@@ -11,7 +11,7 @@ public static partial class LuaVirtualMachine
 {
     [StructLayout(LayoutKind.Auto)]
     [method: MethodImpl(MethodImplOptions.AggressiveInlining)]
-    struct VirtualMachineExecutionContext(
+    internal struct VirtualMachineExecutionContext(
         LuaState state,
         LuaStack stack,
         LuaValue[] resultsBuffer,
@@ -250,7 +250,7 @@ public static partial class LuaVirtualMachine
         }
     }
 
-    enum PostOperationType
+    internal enum PostOperationType
     {
         None,
         Nop,
@@ -306,6 +306,8 @@ public static partial class LuaVirtualMachine
         Loop:
             while (true)
             {
+                context.CancellationToken.ThrowIfCancellationRequested();
+                
                 var instructionRef = Unsafe.Add(ref instructionsHead, ++context.Pc);
                 context.Instruction = instructionRef;
                 if (lineAndCountHookMask.Value != 0 && (context.Pc != context.LastHookPc))
@@ -314,6 +316,9 @@ public static partial class LuaVirtualMachine
                 }
 
                 context.LastHookPc = -1;
+
+                context.State.OnDebugHook(ref context, instructionRef);
+                
                 switch (instructionRef.OpCode)
                 {
                     case OpCode.Move:

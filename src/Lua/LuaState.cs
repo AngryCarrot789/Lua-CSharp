@@ -49,6 +49,11 @@ public sealed class LuaState
     LuaTable? booleanMetatable;
     LuaTable? functionMetatable;
     LuaTable? threadMetatable;
+    
+    /// <summary>
+    /// An event fired before an instruction is invoked
+    /// </summary>
+    public event EventHandler<DebugHookEventArgs>? DebugHook; 
 
     public static LuaState Create()
     {
@@ -237,5 +242,10 @@ public sealed class LuaState
         {
             throw new InvalidOperationException("the lua state is currently running");
         }
+    }
+
+    internal void OnDebugHook(ref LuaVirtualMachine.VirtualMachineExecutionContext context, Instruction instruction) 
+    {
+        DebugHook?.Invoke(this, new DebugHookEventArgs(ref context, instruction));
     }
 }
