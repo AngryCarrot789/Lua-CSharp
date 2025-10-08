@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using Lua.Runtime;
 
 namespace Lua;

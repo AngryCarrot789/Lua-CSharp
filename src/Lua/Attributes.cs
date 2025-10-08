@@ -40,5 +40,3 @@ public sealed class LuaMetamethodAttribute(LuaObjectMetamethod metamethod) : Att
 public sealed class LuaIgnoreMemberAttribute : Attribute
 {
 }
-
-// test! 101
