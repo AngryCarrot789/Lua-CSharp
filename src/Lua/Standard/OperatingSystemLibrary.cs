@@ -28,7 +28,7 @@ public sealed class OperatingSystemLibrary
 
     public ValueTask<int> Clock(LuaFunctionExecutionContext context, Memory<LuaValue> buffer, CancellationToken cancellationToken)
     {
-        buffer.Span[0] = DateTimeHelper.GetUnixTime(DateTime.UtcNow, Process.GetCurrentProcess().StartTime);
+        buffer.Span[0] = DateTimeHelper.GetUnixTime(DateTime.UtcNow, context.State.startTimeUtc);
         return new(1);
     }
 
@@ -60,7 +60,7 @@ public sealed class OperatingSystemLibrary
             isDst = now.IsDaylightSavingTime();
         }
 
-        if (format == "*t")
+        if (format is "*t")
         {
             var table = new LuaTable();
 

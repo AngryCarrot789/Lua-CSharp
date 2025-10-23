@@ -19,6 +19,7 @@ public sealed class LuaState
     readonly LuaTable registry = new();
     readonly UpValue envUpValue;
     bool isRunning;
+    internal DateTime startTimeUtc;
 
     FastStackCore<LuaDebug.LuaDebugBuffer> debugBufferPool;
 
@@ -41,6 +42,9 @@ public sealed class LuaState
     }
 
     public ILuaModuleLoader ModuleLoader { get; set; } = FileModuleLoader.Instance;
+
+    /// <summary>Gets the time when <see cref="RunAsync"/> was invoked</summary>
+    public DateTime StartTimeUtc => startTimeUtc;
 
     // metatables
     LuaTable? nilMetatable;
@@ -70,6 +74,7 @@ public sealed class LuaState
     {
         ThrowIfRunning();
 
+        startTimeUtc = DateTime.UtcNow;
         Volatile.Write(ref isRunning, true);
         try
         {
