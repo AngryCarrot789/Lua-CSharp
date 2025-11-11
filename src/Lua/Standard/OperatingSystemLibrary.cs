@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Lua.Standard.Internal;
 
 namespace Lua.Standard;

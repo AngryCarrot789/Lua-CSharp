@@ -27,6 +27,49 @@ public static class OpenLibsExtensions
         state.LoadedModules["bit32"] = bit32;
     }
 
+    public static void OpenVectorAndMatrixLibraries(this LuaState state) 
+    {
+        state.OpenMatrix4x4Library();
+        state.OpenVector3Library();
+        state.OpenVector4Library();
+    }
+    
+    public static void OpenMatrix4x4Library(this LuaState state)
+    {
+        var bit32 = new LuaTable(0, Matrix4x4Library.Functions.Length);
+        foreach (var func in Matrix4x4Library.Functions)
+        {
+            bit32[func.Name] = func;
+        }
+
+        state.Environment["mat4x4"] = bit32;
+        state.LoadedModules["mat4x4"] = bit32;
+    }
+    
+    public static void OpenVector3Library(this LuaState state)
+    {
+        var bit32 = new LuaTable(0, Vector3Library.Functions.Length);
+        foreach (var func in Vector3Library.Functions)
+        {
+            bit32[func.Name] = func;
+        }
+
+        state.Environment["vec3"] = bit32;
+        state.LoadedModules["vec3"] = bit32;
+    }
+    
+    public static void OpenVector4Library(this LuaState state)
+    {
+        var bit32 = new LuaTable(0, Vector4Library.Functions.Length);
+        foreach (var func in Vector4Library.Functions)
+        {
+            bit32[func.Name] = func;
+        }
+
+        state.Environment["vec4"] = bit32;
+        state.LoadedModules["vec4"] = bit32;
+    }
+
     public static void OpenCoroutineLibrary(this LuaState state)
     {
         var coroutine = new LuaTable(0, CoroutineLibrary.Instance.Functions.Length);
@@ -148,6 +191,7 @@ public static class OpenLibsExtensions
     {
         state.OpenBasicLibrary();
         state.OpenBitwiseLibrary();
+        state.OpenVectorAndMatrixLibraries();
         state.OpenCoroutineLibrary();
         state.OpenIOLibrary();
         state.OpenMathLibrary();
