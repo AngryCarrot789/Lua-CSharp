@@ -27,10 +27,15 @@ public sealed class LuaClosure : LuaFunction
     internal Span<UpValue> GetUpValuesSpan() => upValues.AsSpan();
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal LuaValue GetUpValue(int index)
+    internal LuaValue GetUpValue(int index) 
     {
+        if (index >= upValues.Length)
+            this.ThrowUpValueIndexOutOfBounds(index);
+        
         return upValues[index].GetValue();
     }
+
+    private void ThrowUpValueIndexOutOfBounds(int index) => throw new IndexOutOfRangeException($"UpValue index is out of bounds: {index} >= {upValues.Length}");
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal ref readonly LuaValue GetUpValueRef(int index)
